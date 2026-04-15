@@ -66,7 +66,7 @@ df["deadline_pressure_score"] = np.where(
 
 
 # -----------------------------
-# 7. Scale helper
+# 7. Scaling function
 # -----------------------------
 def min_max_scale(series):
     min_val = series.min()
@@ -79,7 +79,7 @@ def min_max_scale(series):
 
 
 # -----------------------------
-# 8. Scale intermediate features
+# 8. Scale features
 # -----------------------------
 df["sleep_deficit_scaled"] = min_max_scale(df["sleep_deficit"])
 df["workload_index_scaled"] = min_max_scale(df["workload_index"])
@@ -110,24 +110,24 @@ df["productivity_score"] = df["productivity_score"].clip(0, 100)
 
 
 # -----------------------------
-# 10. Burnout Risk Score
+# 10. Burnout Risk Score (FIXED WEIGHTS = 1.0)
 # -----------------------------
 df["burnout_risk_score"] = (
-    0.22 * df["sleep_deficit_scaled"]
+    0.17 * df["sleep_deficit_scaled"]
     + 0.20 * df["stress_scaled"]
     + 0.16 * df["fatigue_scaled"]
     + 0.16 * df["workload_index_scaled"]
     + 0.10 * df["deadline_pressure_scaled"]
     + 0.08 * df["distraction_ratio_scaled"]
-    - 0.08 * df["recovery_balance_scaled"]
-    - 0.05 * df["mood_scaled"]
+    - 0.08 * df["recovery_balance_scaled"]   # inverse correlation
+    - 0.05 * df["mood_scaled"]               # inverse correlation
 )
 
 df["burnout_risk_score"] = df["burnout_risk_score"].clip(0, 100)
 
 
 # -----------------------------
-# 11. Burnout Category
+# 11. Basic Burnout Category
 # -----------------------------
 def categorize_burnout(score):
     if score < 40:
@@ -136,8 +136,25 @@ def categorize_burnout(score):
         return "Moderate"
     return "High"
 
-
 df["burnout_category"] = df["burnout_risk_score"].apply(categorize_burnout)
+
+
+# -----------------------------
+# 11B. Detailed Burnout Levels
+# -----------------------------
+def detailed_burnout_level(score):
+    if score <= 20:
+        return "Very Low"
+    elif score <= 40:
+        return "Low"
+    elif score <= 60:
+        return "Moderate"
+    elif score <= 80:
+        return "High"
+    else:
+        return "Critical"
+
+df["burnout_level_detailed"] = df["burnout_risk_score"].apply(detailed_burnout_level)
 
 
 # -----------------------------
@@ -155,7 +172,7 @@ df["academic_performance_index"] = df["academic_performance_index"].clip(0, 100)
 
 
 # -----------------------------
-# 13. Round key outputs
+# 13. Round outputs
 # -----------------------------
 round_cols = [
     "sleep_deficit",
@@ -174,24 +191,12 @@ df[round_cols] = df[round_cols].round(2)
 # 14. Final Check
 # -----------------------------
 print("Processed Shape:", df.shape)
-print("\nBurnout Category Counts:\n", df["burnout_category"].value_counts())
-print("\nSample Processed Data:")
-print(df[[
-    "student_id",
-    "record_date",
-    "sleep_deficit",
-    "workload_index",
-    "distraction_ratio",
-    "recovery_balance",
-    "productivity_score",
-    "burnout_risk_score",
-    "burnout_category",
-    "academic_performance_index"
-]].head())
+print("\nBurnout Category:\n", df["burnout_category"].value_counts())
+print("\nDetailed Levels:\n", df["burnout_level_detailed"].value_counts())
 
 
 # -----------------------------
-# 15. Save processed dataset
+# 15. Save
 # -----------------------------
 output_path = "data/processed/student_burnout_processed.csv"
 df.to_csv(output_path, index=False)
