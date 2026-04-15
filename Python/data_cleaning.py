@@ -18,13 +18,39 @@ print("Initial Shape:", df.shape)
 # -----------------------------
 # 2. Handle Date Formats
 # -----------------------------
-df["record_date"] = pd.to_datetime(
-    df["record_date"],
-    errors="coerce",
-    dayfirst=True
-)
+def parse_dates_flexibly(date_val):
+    if pd.isna(date_val):
+        return pd.NaT
 
-# Remove rows where date could not be parsed
+    date_val = str(date_val).strip()
+
+    formats = [
+        "%Y-%m-%d",
+        "%d-%m-%Y",
+        "%m/%d/%Y",
+        "%d/%m/%Y",
+    ]
+
+    for fmt in formats:
+        try:
+            return pd.to_datetime(date_val, format=fmt)
+        except ValueError:
+            continue
+
+    try:
+        return pd.to_datetime(date_val, dayfirst=True)
+    except Exception:
+        try:
+            return pd.to_datetime(date_val)
+        except Exception:
+            return pd.NaT
+
+
+df["record_date"] = df["record_date"].apply(parse_dates_flexibly)
+
+print("Unparsed dates before drop:", df["record_date"].isna().sum())
+
+# Drop only truly invalid dates
 df = df.dropna(subset=["record_date"])
 
 
