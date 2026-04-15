@@ -159,6 +159,9 @@ def introduce_inconsistent_stress_formats(df: pd.DataFrame) -> pd.DataFrame:
     """Convert some numeric stress values into messy strings."""
     df = df.copy()
 
+    # Convert whole column to object first so it can safely hold strings
+    df["stress_level"] = df["stress_level"].astype(object)
+
     idx_1 = df.sample(frac=0.03, random_state=11).index
     idx_2 = df.sample(frac=0.02, random_state=22).index
     idx_3 = df.sample(frac=0.01, random_state=33).index
