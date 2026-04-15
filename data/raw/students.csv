@@ -1,0 +1,121 @@
+student_id,department,year_of_study,residence_type
+1001,ECE,1,Day Scholar
+1002,MECH,2,Hosteller
+1003,ECE,1,Day Scholar
+1004,CSE,1,Hosteller
+1005,MECH,2,Hosteller
+1006,MECH,4,Hosteller
+1007,DS,3,Hosteller
+1008,EEE,4,Day Scholar
+1009,CIVIL,2,Hosteller
+1010,IT,1,Hosteller
+1011,AIML,1,Day Scholar
+1012,IT,3,Hosteller
+1013,DS,1,Day Scholar
+1014,ECE,3,Day Scholar
+1015,MECH,1,Hosteller
+1016,MECH,3,Hosteller
+1017,MECH,1,Day Scholar
+1018,CIVIL,4,Day Scholar
+1019,EEE,3,Day Scholar
+1020,MECH,3,Hosteller
+1021,EEE,2,Hosteller
+1022,DS,4,Day Scholar
+1023,MECH,3,Hosteller
+1024,MECH,1,Day Scholar
+1025,AIML,3,Hosteller
+1026,MECH,3,Hosteller
+1027,DS,4,Day Scholar
+1028,EEE,3,Hosteller
+1029,MECH,3,Day Scholar
+1030,AIML,3,Hosteller
+1031,EEE,4,Hosteller
+1032,CSE,1,Hosteller
+1033,EEE,4,Hosteller
+1034,AIML,4,Day Scholar
+1035,CIVIL,1,Hosteller
+1036,CIVIL,3,Hosteller
+1037,CIVIL,4,Hosteller
+1038,DS,1,Day Scholar
+1039,EEE,1,Day Scholar
+1040,MECH,2,Day Scholar
+1041,EEE,1,Day Scholar
+1042,DS,1,Hosteller
+1043,IT,3,Hosteller
+1044,CSE,2,Hosteller
+1045,ECE,4,Hosteller
+1046,EEE,2,Day Scholar
+1047,EEE,3,Day Scholar
+1048,MECH,2,Day Scholar
+1049,AIML,3,Day Scholar
+1050,DS,1,Hosteller
+1051,MECH,1,Day Scholar
+1052,CSE,2,Hosteller
+1053,CSE,1,Hosteller
+1054,MECH,1,Hosteller
+1055,IT,1,Hosteller
+1056,CIVIL,4,Hosteller
+1057,EEE,4,Hosteller
+1058,DS,4,Hosteller
+1059,ECE,1,Day Scholar
+1060,IT,4,Day Scholar
+1061,DS,1,Hosteller
+1062,CSE,4,Day Scholar
+1063,ECE,2,Hosteller
+1064,MECH,4,Hosteller
+1065,AIML,2,Day Scholar
+1066,DS,2,Hosteller
+1067,DS,1,Hosteller
+1068,CSE,1,Hosteller
+1069,EEE,4,Day Scholar
+1070,DS,2,Day Scholar
+1071,CSE,2,Day Scholar
+1072,CSE,4,Day Scholar
+1073,DS,3,Day Scholar
+1074,DS,2,Hosteller
+1075,CIVIL,2,Hosteller
+1076,CSE,3,Hosteller
+1077,CSE,4,Hosteller
+1078,CSE,1,Hosteller
+1079,ECE,1,Hosteller
+1080,AIML,1,Hosteller
+1081,CSE,1,Day Scholar
+1082,IT,3,Hosteller
+1083,IT,2,Day Scholar
+1084,AIML,2,Day Scholar
+1085,DS,3,Hosteller
+1086,CSE,4,Hosteller
+1087,ECE,2,Day Scholar
+1088,EEE,3,Hosteller
+1089,MECH,3,Day Scholar
+1090,EEE,4,Day Scholar
+1091,CSE,3,Hosteller
+1092,EEE,3,Hosteller
+1093,ECE,2,Day Scholar
+1094,CIVIL,2,Day Scholar
+1095,MECH,3,Day Scholar
+1096,CIVIL,1,Hosteller
+1097,AIML,3,Hosteller
+1098,CSE,3,Hosteller
+1099,CIVIL,2,Day Scholar
+1100,AIML,1,Hosteller
+1101,ECE,2,Hosteller
+1102,IT,2,Day Scholar
+1103,EEE,1,Day Scholar
+1104,IT,1,Day Scholar
+1105,MECH,2,Hosteller
+1106,IT,4,Hosteller
+1107,MECH,2,Hosteller
+1108,AIML,1,Hosteller
+1109,IT,4,Hosteller
+1110,CIVIL,2,Hosteller
+1111,AIML,1,Day Scholar
+1112,MECH,2,Day Scholar
+1113,IT,3,Hosteller
+1114,MECH,1,Hosteller
+1115,AIML,3,Day Scholar
+1116,ECE,3,Day Scholar
+1117,AIML,3,Hosteller
+1118,ECE,3,Hosteller
+1119,CIVIL,1,Hosteller
+1120,AIML,3,Day Scholar
