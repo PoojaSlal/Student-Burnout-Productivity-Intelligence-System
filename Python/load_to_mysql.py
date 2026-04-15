@@ -3,17 +3,30 @@ import os
 import pandas as pd
 import mysql.connector
 
+print("Before DB connection")
+
 load_dotenv()
 
+print("HOST:", os.getenv("DB_HOST"))
+print("USER:", os.getenv("DB_USER"))
+print("PASSWORD:", os.getenv("DB_PASSWORD"))
+print("DB:", os.getenv("DB_NAME"))
 # Connect to MySQL
-conn = mysql.connector.connect(
-    host=os.getenv("DB_HOST"),
-    user=os.getenv("DB_USER"),
-    password=os.getenv("DB_PASSWORD"),
-    database=os.getenv("DB_NAME")
-)
-cursor = conn.cursor()
+try:
+    print("Attempting DB connection...")
 
+    conn = mysql.connector.connect(
+        host=os.getenv("DB_HOST"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        database=os.getenv("DB_NAME")
+    )
+
+    print("Connected to DB")
+
+except Exception as e:
+    print("ERROR OCCURRED:")
+    print(e)
 # Load CSV
 df = pd.read_csv("data/processed/student_burnout_processed.csv")
 
