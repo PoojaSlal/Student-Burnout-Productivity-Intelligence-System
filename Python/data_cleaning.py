@@ -51,7 +51,9 @@ df["stress_level"] = df["stress_level"].apply(clean_stress)
 # -----------------------------
 df["sleep_hours"].fillna(df["sleep_hours"].median(), inplace=True)
 df["mood_score"].fillna(df["mood_score"].median(), inplace=True)
-df["class_attendance_hours"].fillna(df["class_attendance_hours"].mean(), inplace=True)
+df["class_attendance_hours"] = df["class_attendance_hours"].fillna(
+    df["class_attendance_hours"].mean()
+)
 
 
 # -----------------------------
