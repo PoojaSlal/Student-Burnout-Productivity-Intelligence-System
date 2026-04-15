@@ -143,13 +143,15 @@ df["burnout_category"] = df["burnout_risk_score"].apply(categorize_burnout)
 # 11B. Detailed Burnout Levels
 # -----------------------------
 def detailed_burnout_level(score):
-    if score <= 20:
+    if score < 20:
         return "Very Low"
-    elif score <= 40:
+    elif score < 40:
         return "Low"
-    elif score <= 60:
+    elif score < 55:
         return "Moderate"
-    elif score <= 80:
+    elif score < 70:
+        return "Elevated"
+    elif score < 85:
         return "High"
     else:
         return "Critical"
