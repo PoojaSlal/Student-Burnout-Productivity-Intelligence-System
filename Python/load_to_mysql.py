@@ -1,126 +1,144 @@
 from dotenv import load_dotenv
 import os
 import pandas as pd
-import mysql.connector
+from sqlalchemy import create_engine, text
+from urllib.parse import quote_plus
 
-print("Before DB connection")
+print("Script started")
 
 load_dotenv()
 
-print("HOST:", os.getenv("DB_HOST"))
-print("USER:", os.getenv("DB_USER"))
-print("PASSWORD:", os.getenv("DB_PASSWORD"))
-print("DB:", os.getenv("DB_NAME"))
-# Connect to MySQL
-try:
-    print("Attempting DB connection...")
+db_host = os.getenv("DB_HOST")
+db_user = os.getenv("DB_USER")
+db_password = os.getenv("DB_PASSWORD")
+db_name = os.getenv("DB_NAME")
 
-    conn = mysql.connector.connect(
-        host=os.getenv("DB_HOST"),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASSWORD"),
-        database=os.getenv("DB_NAME")
-    )
+print("Loading environment variables...")
+print("HOST:", db_host)
+print("USER:", db_user)
+print("DB:", db_name)
 
-    print("Connected to DB")
+print("Building SQLAlchemy engine...")
 
-except Exception as e:
-    print("ERROR OCCURRED:")
-    print(e)
+encoded_password = quote_plus(db_password)
+
+engine = create_engine(
+    f"mysql+pymysql://{db_user}:{encoded_password}@{db_host}/{db_name}",
+    pool_pre_ping=True
+)
+
+print("Engine created")
+
 # Load CSV
 df = pd.read_csv("data/processed/student_burnout_processed.csv")
-
 print("CSV loaded:", df.shape)
 
+# Make sure record_date is proper date
+df["record_date"] = pd.to_datetime(df["record_date"]).dt.date
 
 # -----------------------------
-# 1. Insert into dim_students
+# 1. dim_students
 # -----------------------------
-students_df = df[[
-    "student_id", "department", "year_of_study", "residence_type"
-]].drop_duplicates()
+students_df = df[
+    ["student_id", "department", "year_of_study", "residence_type"]
+].drop_duplicates()
 
-for _, row in students_df.iterrows():
-    cursor.execute("""
-        INSERT IGNORE INTO dim_students 
-        (student_id, department, year_of_study, residence_type)
-        VALUES (%s, %s, %s, %s)
-    """, tuple(row))
+# Clear and reload
+with engine.begin() as conn:
+    conn.execute(text("DELETE FROM fact_intelligence_scores"))
+    conn.execute(text("DELETE FROM fact_academic_load"))
+    conn.execute(text("DELETE FROM fact_daily_metrics"))
+    conn.execute(text("DELETE FROM dim_students"))
 
-conn.commit()
+students_df.to_sql(
+    "dim_students",
+    con=engine,
+    if_exists="append",
+    index=False,
+    method="multi",
+    chunksize=1000
+)
 print("Inserted dim_students")
 
-
 # -----------------------------
-# 2. Insert into fact_daily_metrics
+# 2. fact_daily_metrics
 # -----------------------------
-for _, row in df.iterrows():
-    cursor.execute("""
-        INSERT INTO fact_daily_metrics (
-            student_id, record_date,
-            sleep_hours, study_hours, screen_time_hours,
-            social_media_hours, physical_activity_minutes,
-            class_attendance_hours, break_hours
-        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-    """, (
-        row["student_id"], row["record_date"],
-        row["sleep_hours"], row["study_hours"], row["screen_time_hours"],
-        row["social_media_hours"], row["physical_activity_minutes"],
-        row["class_attendance_hours"], row["break_hours"]
-    ))
+daily_df = df[
+    [
+        "student_id",
+        "record_date",
+        "sleep_hours",
+        "study_hours",
+        "screen_time_hours",
+        "social_media_hours",
+        "physical_activity_minutes",
+        "class_attendance_hours",
+        "break_hours",
+    ]
+]
 
-conn.commit()
+daily_df.to_sql(
+    "fact_daily_metrics",
+    con=engine,
+    if_exists="append",
+    index=False,
+    method="multi",
+    chunksize=1000
+)
 print("Inserted fact_daily_metrics")
 
-
 # -----------------------------
-# 3. Insert into fact_academic_load
+# 3. fact_academic_load
 # -----------------------------
-for _, row in df.iterrows():
-    cursor.execute("""
-        INSERT INTO fact_academic_load (
-            student_id, record_date,
-            assignments_due_count, tests_upcoming_count,
-            submission_deadline_proximity,
-            lab_hours, project_work_hours
-        ) VALUES (%s, %s, %s, %s, %s, %s, %s)
-    """, (
-        row["student_id"], row["record_date"],
-        row["assignments_due_count"], row["tests_upcoming_count"],
-        row["submission_deadline_proximity"],
-        row["lab_hours"], row["project_work_hours"]
-    ))
+academic_df = df[
+    [
+        "student_id",
+        "record_date",
+        "assignments_due_count",
+        "tests_upcoming_count",
+        "submission_deadline_proximity",
+        "lab_hours",
+        "project_work_hours",
+    ]
+]
 
-conn.commit()
+academic_df.to_sql(
+    "fact_academic_load",
+    con=engine,
+    if_exists="append",
+    index=False,
+    method="multi",
+    chunksize=1000
+)
 print("Inserted fact_academic_load")
 
-
 # -----------------------------
-# 4. Insert into intelligence table
+# 4. fact_intelligence_scores
 # -----------------------------
-for _, row in df.iterrows():
-    cursor.execute("""
-        INSERT INTO fact_intelligence_scores (
-            student_id, record_date,
-            sleep_deficit, workload_index, distraction_ratio, recovery_balance,
-            productivity_score, burnout_risk_score,
-            burnout_category, burnout_level_detailed,
-            academic_performance_index
-        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-    """, (
-        row["student_id"], row["record_date"],
-        row["sleep_deficit"], row["workload_index"],
-        row["distraction_ratio"], row["recovery_balance"],
-        row["productivity_score"], row["burnout_risk_score"],
-        row["burnout_category"], row["burnout_level_detailed"],
-        row["academic_performance_index"]
-    ))
+intelligence_df = df[
+    [
+        "student_id",
+        "record_date",
+        "sleep_deficit",
+        "workload_index",
+        "distraction_ratio",
+        "recovery_balance",
+        "productivity_score",
+        "burnout_risk_score",
+        "burnout_category",
+        "burnout_level_detailed",
+        "academic_performance_index",
+    ]
+]
 
-conn.commit()
+intelligence_df.to_sql(
+    "fact_intelligence_scores",
+    con=engine,
+    if_exists="append",
+    index=False,
+    method="multi",
+    chunksize=1000
+)
 print("Inserted fact_intelligence_scores")
-
-
-cursor.close()
-conn.close()
 
 print("All data inserted successfully 🚀")
