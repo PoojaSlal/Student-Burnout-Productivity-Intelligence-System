@@ -239,6 +239,12 @@ The Power BI dashboard includes:
 
 ---
 
+## Dashboard Preview
+
+![Dashboard](powerbi/dashboard.png)
+
+---
+
 ## Key Insights
 
 - Most observations fall into **Low** and **Moderate** burnout categories  
