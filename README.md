@@ -73,8 +73,6 @@ Power BI Dashboarding
 ```
 ## Dataset Design
 
-## Dataset Design
-
 Unlike static public datasets, this project uses a custom-built synthetic data generation approach to simulate realistic student behavioral and academic patterns.
 
 This was done to address:
