@@ -70,3 +70,97 @@ Burnout & Productivity Scoring
 SQL Database Loading
     ↓
 Power BI Dashboarding
+
+## Dataset Design
+
+The dataset is built as a daily time-series structure:
+
+- 120 students  
+- 90 days  
+- 10,000+ records  
+
+Each row represents:
+- one student  
+- on one day  
+
+### Core Raw Fields
+
+#### Student attributes
+- `student_id`
+- `department`
+- `year_of_study`
+- `residence_type`
+
+#### Daily behavior
+- `sleep_hours`
+- `study_hours`
+- `screen_time_hours`
+- `social_media_hours`
+- `physical_activity_minutes`
+- `class_attendance_hours`
+- `break_hours`
+
+#### Academic load
+- `assignments_due_count`
+- `tests_upcoming_count`
+- `submission_deadline_proximity`
+- `lab_hours`
+- `project_work_hours`
+
+#### Wellbeing
+- `stress_level`
+- `mood_score`
+- `fatigue_level`
+- `motivation_score`
+
+---
+
+## Data Cleaning
+
+The raw dataset intentionally includes realistic imperfections to simulate real-world analytics challenges.
+
+### Cleaning steps performed
+- standardized mixed date formats  
+- converted inconsistent stress values like `"7/10"` and `"High"`  
+- handled missing values using mean/median imputation  
+- removed duplicate student-date records  
+- capped unrealistic outliers  
+- converted features to consistent numeric types  
+
+### Result
+- raw rows: **11016**  
+- cleaned rows: **10661**  
+
+---
+
+## Feature Engineering
+
+The following derived features were created:
+
+- `sleep_deficit`
+- `workload_index`
+- `distraction_ratio`
+- `recovery_balance`
+- `deadline_pressure_score`
+- `productivity_score`
+- `burnout_risk_score`
+- `academic_performance_index`
+
+---
+
+## Burnout Scoring Logic
+
+Burnout risk is modeled as a weighted combination of normalized stress-inducing and recovery-related factors.
+
+### Burnout score formula
+
+```text
+burnout_risk_score =
+    0.17 * sleep_deficit_scaled
+  + 0.20 * stress_scaled
+  + 0.16 * fatigue_scaled
+  + 0.16 * workload_index_scaled
+  + 0.10 * deadline_pressure_scaled
+  + 0.08 * distraction_ratio_scaled
+  - 0.08 * recovery_balance_scaled
+  - 0.05 * mood_scaled
