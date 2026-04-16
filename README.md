@@ -73,7 +73,16 @@ Power BI Dashboarding
 ```
 ## Dataset Design
 
-The dataset is built as a daily time-series structure:
+## Dataset Design
+
+Unlike static public datasets, this project uses a custom-built synthetic data generation approach to simulate realistic student behavioral and academic patterns.
+
+This was done to address:
+- lack of publicly available datasets combining behavioral, academic, and wellbeing factors
+- need for controlled feature relationships (e.g., workload → stress → burnout)
+- ability to model time-series behavior and student lifecycle patterns
+
+The dataset follows a daily time-series structure:
 
 - 120 students  
 - 90 days  
@@ -81,7 +90,10 @@ The dataset is built as a daily time-series structure:
 
 Each row represents:
 - one student  
-- on one day  
+- one day of activity  
+
+This design allows the system to capture evolving behavioral trends rather than static snapshots.
+
 
 ### Core Raw Fields
 
