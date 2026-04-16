@@ -70,7 +70,7 @@ Burnout & Productivity Scoring
 SQL Database Loading
     ↓
 Power BI Dashboarding
-
+```
 ## Dataset Design
 
 The dataset is built as a daily time-series structure:
