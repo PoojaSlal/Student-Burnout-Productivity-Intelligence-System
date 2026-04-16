@@ -273,3 +273,55 @@ student-burnout-productivity-intelligence/
 │   └── dashboard.pbix
 │
 └── README.md
+
+```
+## How to Run
+
+### 1. Generate raw dataset
+```bash
+python python/generate_raw_dataset.py
+```
+
+### 2. Clean the dataset
+```bash
+python python/data_cleaning.py
+````
+### 3. Create engineered features and scores
+```bash
+python python/feature_engineering.py
+```
+### 4. Load processed data into MySQL
+```bash
+python python/load_to_mysql.py
+```
+
+
+### 5. Create SQL schema and run queries
+
+Execute the scripts in the `sql/` folder using MySQL Workbench.
+
+### 6. Open the Power BI dashboard
+
+Load the SQL tables or processed dataset into Power BI and open the dashboard file.
+
+---
+
+## Future Improvements
+
+- weekly trend and burnout velocity analysis  
+- stronger departmental differentiation in synthetic data generation  
+- predictive modeling for early risk escalation  
+- alert-based intervention recommendations  
+- historical trend comparison across semesters  
+
+---
+
+## Project Outcome
+
+This project demonstrates how behavioral, academic, and wellbeing data can be transformed into an interpretable student burnout intelligence system using end-to-end analytics, database design, and dashboarding.
+
+---
+
+## Author
+
+**Pooja S Lal**
