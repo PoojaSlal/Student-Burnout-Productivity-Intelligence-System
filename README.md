@@ -164,3 +164,112 @@ burnout_risk_score =
   + 0.08 * distraction_ratio_scaled
   - 0.08 * recovery_balance_scaled
   - 0.05 * mood_scaled
+
+### Interpretation
+
+- stress, fatigue, workload, and sleep deficit increase burnout risk  
+- recovery balance and mood reduce burnout risk  
+- final score is clipped to the range **0–100**  
+
+---
+
+## Classification System
+
+### Primary classification
+- **Low**: 0–39  
+- **Moderate**: 40–69  
+- **High**: 70–100  
+
+### Detailed classification
+- **Very Low**: 0–19  
+- **Low**: 20–39  
+- **Moderate**: 40–54  
+- **Elevated**: 55–69  
+- **High**: 70–84  
+- **Critical**: 85–100  
+
+### Design insight
+The detailed classification helps identify students in the **Elevated** range, which is useful for early intervention before they move into high burnout states.
+
+---
+
+## SQL Database Design
+
+The processed data is normalized into a relational schema:
+
+### Tables
+
+#### `dim_students`
+Static student information  
+
+#### `fact_daily_metrics`
+Daily behavior and routine metrics  
+
+#### `fact_academic_load`
+Academic pressure and workload metrics  
+
+#### `fact_intelligence_scores`
+Engineered features, productivity, and burnout outputs  
+
+This design makes the project more scalable and system-oriented instead of relying on a single flat table.
+
+---
+
+## Dashboard Highlights
+
+The Power BI dashboard includes:
+
+### KPI cards
+- Total Students  
+- Average Burnout Score  
+- Average Productivity Score  
+
+### Visuals
+- Burnout category distribution  
+- Detailed burnout level distribution  
+- Average burnout by department  
+- Workload vs productivity scatter analysis  
+- At-risk student intervention table  
+
+### Interactivity
+- slicers for:
+  - department  
+  - year  
+  - residence type  
+
+---
+
+## Key Insights
+
+- Most observations fall into **Low** and **Moderate** burnout categories  
+- The **Elevated** group is especially important for early detection  
+- Burnout patterns are more strongly linked to behavioral factors such as workload, sleep, and recovery than to department alone  
+- Productivity does not increase indefinitely with workload and may decline at higher stress levels  
+- The intervention table helps identify students requiring attention based on detailed burnout classification  
+
+---
+
+## Repository Structure
+
+```text
+student-burnout-productivity-intelligence/
+│
+├── data/
+│   ├── raw/
+│   ├── cleaned/
+│   └── processed/
+│
+├── python/
+│   ├── generate_raw_dataset.py
+│   ├── data_cleaning.py
+│   ├── feature_engineering.py
+│   └── load_to_mysql.py
+│
+├── sql/
+│   ├── schema.sql
+│   └── queries.sql
+│
+├── powerbi/
+│   └── dashboard.pbix
+│
+└── README.md
