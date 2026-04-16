@@ -41,7 +41,6 @@ df["distraction_ratio"] = np.where(
     df["social_media_hours"] / df["screen_time_hours"],
     0
 )
-
 df["distraction_ratio"] = df["distraction_ratio"].clip(0, 1)
 
 
@@ -60,15 +59,17 @@ df["recovery_balance"] = (
 # -----------------------------
 df["deadline_pressure_score"] = np.where(
     df["submission_deadline_proximity"] <= 2, 10,
-    np.where(df["submission_deadline_proximity"] <= 5, 7,
-             np.where(df["submission_deadline_proximity"] <= 10, 4, 2))
+    np.where(
+        df["submission_deadline_proximity"] <= 5, 7,
+        np.where(df["submission_deadline_proximity"] <= 10, 4, 2)
+    )
 )
 
 
 # -----------------------------
 # 7. Scaling function
 # -----------------------------
-def min_max_scale(series):
+def min_max_scale(series: pd.Series) -> pd.Series:
     min_val = series.min()
     max_val = series.max()
 
@@ -105,12 +106,11 @@ df["productivity_score"] = (
     - 0.08 * df["distraction_ratio_scaled"]
     - 0.07 * df["workload_index_scaled"]
 )
-
 df["productivity_score"] = df["productivity_score"].clip(0, 100)
 
 
 # -----------------------------
-# 10. Burnout Risk Score (FIXED WEIGHTS = 1.0)
+# 10. Burnout Risk Score
 # -----------------------------
 df["burnout_risk_score"] = (
     0.17 * df["sleep_deficit_scaled"]
@@ -119,22 +119,22 @@ df["burnout_risk_score"] = (
     + 0.16 * df["workload_index_scaled"]
     + 0.10 * df["deadline_pressure_scaled"]
     + 0.08 * df["distraction_ratio_scaled"]
-    - 0.08 * df["recovery_balance_scaled"]   # inverse correlation
-    - 0.05 * df["mood_scaled"]               # inverse correlation
+    - 0.08 * df["recovery_balance_scaled"]
+    - 0.05 * df["mood_scaled"]
 )
-
 df["burnout_risk_score"] = df["burnout_risk_score"].clip(0, 100)
 
 
 # -----------------------------
 # 11. Basic Burnout Category
 # -----------------------------
-def categorize_burnout(score):
+def categorize_burnout(score: float) -> str:
     if score < 40:
         return "Low"
     elif score < 70:
         return "Moderate"
     return "High"
+
 
 df["burnout_category"] = df["burnout_risk_score"].apply(categorize_burnout)
 
@@ -142,7 +142,7 @@ df["burnout_category"] = df["burnout_risk_score"].apply(categorize_burnout)
 # -----------------------------
 # 11B. Detailed Burnout Levels
 # -----------------------------
-def detailed_burnout_level(score):
+def detailed_burnout_level(score: float) -> str:
     if score < 20:
         return "Very Low"
     elif score < 40:
@@ -156,11 +156,61 @@ def detailed_burnout_level(score):
     else:
         return "Critical"
 
+
 df["burnout_level_detailed"] = df["burnout_risk_score"].apply(detailed_burnout_level)
 
 
 # -----------------------------
-# 12. Academic Performance Index
+# 12. Primary Trigger Analysis
+# -----------------------------
+trigger_columns = [
+    "sleep_deficit_scaled",
+    "stress_scaled",
+    "fatigue_scaled",
+    "workload_index_scaled",
+    "deadline_pressure_scaled",
+    "distraction_ratio_scaled"
+]
+
+trigger_name_map = {
+    "sleep_deficit_scaled": "Sleep Deficit",
+    "stress_scaled": "Stress",
+    "fatigue_scaled": "Fatigue",
+    "workload_index_scaled": "Workload",
+    "deadline_pressure_scaled": "Deadline Pressure",
+    "distraction_ratio_scaled": "Distraction"
+}
+
+df["primary_trigger_raw"] = df[trigger_columns].idxmax(axis=1)
+df["primary_trigger"] = df["primary_trigger_raw"].map(trigger_name_map)
+
+
+# -----------------------------
+# 13. Suggested Action
+# -----------------------------
+action_map = {
+    "Sleep Deficit": "Recommend sleep recovery support",
+    "Stress": "Recommend stress counseling",
+    "Fatigue": "Recommend temporary workload reduction",
+    "Workload": "Recommend workload balancing",
+    "Deadline Pressure": "Recommend deadline planning support",
+    "Distraction": "Recommend distraction management"
+}
+
+df["suggested_action"] = df["primary_trigger"].map(action_map)
+
+
+# -----------------------------
+# 14. Limit actions to at-risk students
+# -----------------------------
+risk_levels = ["Elevated", "High", "Critical"]
+
+df.loc[~df["burnout_level_detailed"].isin(risk_levels), "primary_trigger"] = np.nan
+df.loc[~df["burnout_level_detailed"].isin(risk_levels), "suggested_action"] = np.nan
+
+
+# -----------------------------
+# 15. Academic Performance Index
 # -----------------------------
 df["academic_performance_index"] = (
     0.35 * df["productivity_score"]
@@ -169,12 +219,11 @@ df["academic_performance_index"] = (
     - 0.10 * df["fatigue_scaled"]
     - 0.10 * df["burnout_risk_score"]
 )
-
 df["academic_performance_index"] = df["academic_performance_index"].clip(0, 100)
 
 
 # -----------------------------
-# 13. Round outputs
+# 16. Round outputs
 # -----------------------------
 round_cols = [
     "sleep_deficit",
@@ -190,15 +239,22 @@ df[round_cols] = df[round_cols].round(2)
 
 
 # -----------------------------
-# 14. Final Check
+# 17. Cleanup helper columns
+# -----------------------------
+df = df.drop(columns=["primary_trigger_raw"])
+
+
+# -----------------------------
+# 18. Final Check
 # -----------------------------
 print("Processed Shape:", df.shape)
 print("\nBurnout Category:\n", df["burnout_category"].value_counts())
 print("\nDetailed Levels:\n", df["burnout_level_detailed"].value_counts())
+print("\nPrimary Trigger Sample:\n", df[["burnout_level_detailed", "primary_trigger", "suggested_action"]].head(10))
 
 
 # -----------------------------
-# 15. Save
+# 19. Save
 # -----------------------------
 output_path = "data/processed/student_burnout_processed.csv"
 df.to_csv(output_path, index=False)
