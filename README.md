@@ -164,7 +164,7 @@ burnout_risk_score =
   + 0.08 * distraction_ratio_scaled
   - 0.08 * recovery_balance_scaled
   - 0.05 * mood_scaled
-
+```
 ### Interpretation
 
 - stress, fatigue, workload, and sleep deficit increase burnout risk  
