@@ -41,6 +41,7 @@ This project addresses questions such as:
 - Hierarchical burnout classification
 - Normalized SQL database design
 - Power BI dashboard with intervention-focused insights
+- Actionable intervention system with primary trigger identification and suggested actions
 
 ---
 
@@ -155,6 +156,8 @@ The following derived features were created:
 - `productivity_score`
 - `burnout_risk_score`
 - `academic_performance_index`
+- `primary_trigger` (main contributing factor to burnout)
+- `suggested_action` (recommended intervention)
 
 ---
 
@@ -181,6 +184,41 @@ burnout_risk_score =
 - recovery balance and mood reduce burnout risk  
 - final score is clipped to the range **0–100**  
 
+---
+
+## Decision Support Layer
+
+To enhance actionability, the system identifies the primary contributing factor for burnout and recommends targeted interventions.
+
+### Primary Trigger
+For each at-risk student, the system determines the dominant contributing factor among:
+- sleep deficit
+- stress
+- fatigue
+- workload
+- deadline pressure
+- distraction
+
+### Suggested Action
+Based on the primary trigger, the system generates actionable recommendations:
+
+- Sleep Deficit → Recommend sleep recovery support  
+- Stress → Recommend stress counseling  
+- Fatigue → Recommend temporary workload reduction  
+- Workload → Recommend workload balancing  
+- Deadline Pressure → Recommend planning support  
+- Distraction → Recommend distraction management  
+
+### Alert Filtering Logic
+
+To avoid alert fatigue, recommendations are generated only for:
+- Elevated
+- High
+- Critical
+
+Students in lower categories are excluded from intervention to maintain focus on high-priority cases.
+
+This transforms the system from a descriptive dashboard into a decision-support system.
 ---
 
 ## Classification System
@@ -239,8 +277,7 @@ The Power BI dashboard includes:
 - Detailed burnout level distribution  
 - Average burnout by department  
 - Workload vs productivity scatter analysis  
-- At-risk student intervention table  
-
+- At-risk student intervention table with trigger-based recommendations
 ### Interactivity
 - slicers for:
   - department  
@@ -262,7 +299,8 @@ The Power BI dashboard includes:
 - Burnout patterns are more strongly linked to behavioral factors such as workload, sleep, and recovery than to department alone  
 - Productivity does not increase indefinitely with workload and may decline at higher stress levels  
 - The intervention table helps identify students requiring attention based on detailed burnout classification  
-
+- The system provides actionable recommendations by identifying the primary cause of burnout for each at-risk student
+  
 ---
 
 ## Repository Structure
@@ -334,8 +372,9 @@ Load the SQL tables or processed dataset into Power BI and open the dashboard fi
 
 ## Project Outcome
 
-This project demonstrates how behavioral, academic, and wellbeing data can be transformed into an interpretable student burnout intelligence system using end-to-end analytics, database design, and dashboarding.
+This project demonstrates how behavioral, academic, and wellbeing data can be transformed into an interpretable student burnout intelligence system.
 
+It goes beyond visualization by incorporating feature engineering, risk scoring, classification, and a decision-support layer that identifies the primary cause of burnout and recommends targeted interventions for at-risk students.
 ---
 
 ## Author
