@@ -288,7 +288,7 @@ The Power BI dashboard includes:
 
 ## Dashboard Preview
 
-![Dashboard](powerbi/dashboard.png)
+![Dashboard](powerbi/dashboard_u.png)
 
 ---
 
