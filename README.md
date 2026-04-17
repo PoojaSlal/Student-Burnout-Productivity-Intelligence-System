@@ -365,7 +365,7 @@ Load the SQL tables or processed dataset into Power BI and open the dashboard fi
 - weekly trend and burnout velocity analysis  
 - stronger departmental differentiation in synthetic data generation  
 - predictive modeling for early risk escalation  
-- alert-based intervention recommendations  
+-automated email/SMS alert system for real-time intervention
 - historical trend comparison across semesters  
 
 ---
