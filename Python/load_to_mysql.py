@@ -127,6 +127,8 @@ intelligence_df = df[
         "burnout_risk_score",
         "burnout_category",
         "burnout_level_detailed",
+        "primary_trigger",
+        "suggested_action",
         "academic_performance_index",
     ]
 ]
@@ -141,4 +143,4 @@ intelligence_df.to_sql(
 )
 print("Inserted fact_intelligence_scores")
 
-print("All data inserted successfully 🚀")
+print("All data inserted successfully!")

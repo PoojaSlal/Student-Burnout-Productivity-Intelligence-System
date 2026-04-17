@@ -163,3 +163,8 @@ JOIN dim_students s
 GROUP BY i.student_id, s.department, s.year_of_study
 ORDER BY avg_burnout_risk DESC
 LIMIT 10;
+
+--Addition of Primary Trigger and Suggestion
+ALTER TABLE fact_intelligence_scores
+ADD COLUMN primary_trigger VARCHAR(50),
+ADD COLUMN suggested_action VARCHAR(255);
